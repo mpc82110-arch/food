@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💜 刘思童 · 紫藤花美食命运机 💜</title><style>
+    /* ===== 1. 全局主题：紫色燕尾花（Wisteria） ===== */
+    :root {
+        --wisteria-light: #ede4ff;
+        --wisteria-mid: #c8a9ff;
+        --wisteria-deep: #9c6dff;
+        --wisteria-dark: #6a38c7;
+        --glow-gold: #ffd966;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at 30% 20%, var(--wisteria-light), var(--wisteria-mid), var(--wisteria-dark));
+        overflow: hidden;
+    }
+
+    /* ==== 背景漂浮燕尾花瓣 ==== */
+    .petal {
+        position: absolute;
+        width: 18px;
+        height: 22px;
+        background: var(--wisteria-mid);
+        border-radius: 60% 60% 80% 80%;
+        filter: blur(1px) brightness(1.2);
+        opacity: 0.55;
+        animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(-10vh) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    /* ===== 主卡片 ===== */
+    .container {
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(12px);
+        padding: 40px 48px;
+        border-radius: 28px;
+        box-shadow: 0 15px 50px rgba(120,60,200,0.4);
+        text-align: center;
+        width: 90%;
+        max-width: 520px;
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%,100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+        font-size: 2.3em;
+        margin: 0 0 5px;
+        color: var(--wisteria-dark);
+        text-shadow: 0 0 20px rgba(255,255,255,0.9);
+    }
+
+    #subtitle {
+        font-size: 1.15em;
+        color: var(--wisteria-mid);
+        margin-bottom: 25px;
+        font-weight: bold;
+    }
+
+    /* ===== 结果显示区 ===== */
+    #result {
+        min-height: 85px;
+        font-size: 3.2em;
+        font-weight: 900;
+        color: var(--wisteria-dark);
+        margin: 25px 0;
+        transition: 0.2s;
+        text-shadow: 0 0 20px rgba(80,20,150,0.35);
+    }
+
+    /* ==== 转动闪烁 ==== */
+    @keyframes hyper-spin {
+        0%,100% { transform: scale(1); filter: blur(0px); }
+        40% { transform: scale(1.05); filter: blur(1px); }
+    }
+    .spinning {
+        animation: hyper-spin 0.12s infinite;
+        color: var(--glow-gold) !important;
+    }
+
+    /* ==== 最终结果揭示 ==== */
+    @keyframes reveal {
+        0% { transform: rotateX(90deg) scale(0.6); opacity: 0; }
+        60% { transform: rotateX(-20deg) scale(1.25); opacity: 1; }
+        100% { transform: rotateX(0deg) scale(1); }
+    }
+    .final {
+        animation: reveal 0.7s cubic-bezier(.21,1.01,.22,1.0);
+        color: var(--glow-gold) !important;
+        text-shadow: 0 0 30px var(--glow-gold);
+    }
+
+    /* ===== 按钮 ===== */
+    button {
+        background: var(--wisteria-dark);
+        border: none;
+        padding: 16px 40px;
+        color: #fff;
+        border-radius: 14px;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 8px 22px rgba(90,40,180,0.45);
+        transition: 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+        transform: scale(1.05);
+        background: #5a2fb8;
+    }
+
+    button:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    button:disabled {
+        background: #d5c3ff;
+    }
+
+    /* ===== 食物列表计数 ===== */
+    #food-list-display {
+        color: #6b6b6b;
+        margin-top: 18px;
+    }
+</style>
+
+</head>
+<body><!-- 自动生成一批落下的紫藤花瓣 --><script>
+for (let i = 0; i < 20; i++) {
+    const p = document.createElement("div");
+    p.className = "petal";
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.animationDuration = 6 + Math.random() * 6 + "s";
+    p.style.opacity = 0.35 + Math.random() * 0.4;
+    document.body.appendChild(p);
+}
+</script><div class="container">
+    <h1>💜 刘思童 · 紫藤花专属美食命运机 💜</h1>
+    <div id="subtitle">每天都帮你做决定，因为你值得被宠爱</div><div id="result">点击开始，让紫藤花替你选今天的命运美食</div>
+
+<button onclick="drawFood()">开始！</button>
+
+<p id="food-list-display"></p >
+
+</div><script>
+    const foodOptions = [
+        "麻辣火锅 🔥", "寿司 🍣", "重庆小面 🍜", "烤肉 🥩", "披萨 🍕", "清淡简餐 🍱", "烤鱼 🐟", "酸菜鱼 🐠", "甜品当正餐 🍰", 
+        "冒菜 🌶️", "汉堡 🍔", "砂锅粥 🥣", "铁板烧 🍲", "韩式拌饭 🍚", "螺蛳粉 🌶️🍜",
+        "自助餐 🍽️", "路边摊 🍢", "饺子 🥟", "便当 🍱", "泰式咖喱 🍛",
+        "生煎/小笼包 🥟", "意大利面 🍝", "KFC/McD 🍟", "潮汕火锅 🥘"
+    ];
+
+    let last = null;
+    const resultEl = document.getElementById("result");
+    const btn = document.querySelector("button");
+
+    function drawFood() {
+        btn.disabled = true;
+        resultEl.classList.remove("final");
+
+        let count = 0;
+        const max = 32;
+
+        resultEl.classList.add("spinning");
+
+        const spin = setInterval(() => {
+            const idx = Math.floor(Math.random() * foodOptions.length);
+            resultEl.textContent = foodOptions[idx];
+            count++;
+
+            if (count >= max) {
+                clearInterval(spin);
+
+                resultEl.classList.remove("spinning");
+
+                let pool = foodOptions.filter(f => f !== last);
+                if (!pool.length) pool = foodOptions;
+
+                const final = pool[Math.floor(Math.random() * pool.length)];
+                last = final;
+
+                resultEl.textContent = final;
+                resultEl.classList.add("final");
+
+                btn.textContent = `再来一次（排除：${last.split(" ")[0]}）`;
+                btn.disabled = false;
+            }
+        }, 75);
+    }
+
+    document.getElementById("food-list-display").textContent =
+        `思童，目前共有 ${foodOptions.length} 种紫藤花认证的美食选择哦`;
+</script></body>
+</html>
