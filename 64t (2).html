@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💜 刘思童专属美食决策王 💜</title>
+    <style>
+        /* 1. 整体紫色主题与美学 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ede7f6 0%, #d1c4e9 100%); /* 优雅的薰衣草渐变 */
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px 50px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(103, 58, 183, 0.4); /* 深紫色光芒阴影 */
+            max-width: 500px;
+            width: 90%;
+            transition: transform 0.3s;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #673ab7; /* 主色调：深紫色 */
+            margin-bottom: 5px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #subtitle {
+            color: #9575cd; /* 柔和紫色 */
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* 2. 结果显示区域 - 核心动态效果 */
+        #result {
+            font-size: 3.5em; /* 字号更大 */
+            color: #3f51b5; 
+            font-weight: 900;
+            margin: 30px 0;
+            min-height: 80px; 
+            transition: all 0.2s ease-out;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 动态效果1: 抽签时的剧烈晃动 */
+        @keyframes intense-shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 1px) rotate(1deg); }
+            40% { transform: translate(3px, -2px) rotate(-1deg); }
+            60% { transform: translate(-4px, 1px) rotate(1deg); }
+            80% { transform: translate(4px, -2px) rotate(-1deg); }
+        }
+        .spin-effect {
+            animation: intense-shake 0.08s infinite; /* 快速晃动，模拟滚轮 */
+            color: #ffc107 !important; /* 滚轮时高亮为金色 */
+        }
+        
+        /* 动态效果2: 最终结果公布的动画 */
+        @keyframes final-reveal {
+            0% { transform: scale(0.5) rotateY(180deg); opacity: 0; }
+            75% { transform: scale(1.2) rotateY(-10deg); opacity: 1; }
+            100% { transform: scale(1.0) rotateY(0deg); }
+        }
+        .animate-result {
+            animation: final-reveal 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 弹跳进入效果 */
+            color: #ffc107 !important; /* 最终结果使用金色突出 */
+            text-shadow: 0 0 15px #ffeb3b; /* 金色发光 */
+        }
+        
+        /* 3. 按钮美化 */
+        button {
+            background-color: #673ab7; /* 按钮：深紫色 */
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            text-align: center;
+            font-size: 20px;
+            margin-top: 25px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(103, 58, 183, 0.5);
+            font-weight: bold;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #512da8;
+            box-shadow: 0 8px 25px rgba(103, 58, 183, 0.7);
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+        
+        button:disabled {
+            background-color: #b39ddb;
+            cursor: not-allowed;
+        }
+
+        #food-list-display {
+            margin-top: 20px;
+            font-size: 1.0em;
+            color: #777;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>💜 刘思童专属美食决策王 💜</h1>
+    <div id="subtitle">—— 每次都为你，做出完美选择！</div>
+
+    <div id="result">快点我！解锁今天的美味奥秘！</div>
+
+    <button onclick="drawFood()">开始决策！</button>
+
+    <p id="food-list-display"></p >
+</div>
+
+<script>
+    // ** 【美食清单】 **
+    const foodOptions = [
+        "麻辣火锅 🔥", "日式寿司 🍣", "兰州拉面 🍜", "美味烤肉 🥩", 
+        "清淡家常菜 🍚", "西式披萨 🍕", "海鲜大餐 🦀", "麦当劳/肯德基 🍟",
+        "素食沙拉 🥗", "麻辣香锅/冒菜 🌶️", "粤式早茶/点心 🥟", "酸菜鱼/水煮鱼 🐟", 
+        "韩国拌饭/石锅饭 🍚", "意大利面/意面 🍝", "潮汕砂锅粥 🥣", "铁板烧/寿喜锅 🍲", 
+        "各种饺子/馄饨 🥟", "螺蛳粉 🌶️🍜", "港式茶餐厅 🍳", "东南亚咖喱 🍛", 
+        "烤鱼/纸包鱼 🐟", "新疆大盘鸡 🍗", "小笼包/生煎 🥟", "重庆小面 🍜", 
+        "汉堡王/赛百味 🥪", "自助餐吃到饱 🍽️", "自己做饭！👨‍🍳", "路边摊小吃 🍢", 
+        "串串香/冷锅串串 🍡", "法式大餐/高级料理 ✨", "简餐便当 🍱", 
+        "甜品下午茶 (当作正餐？) 🍰"
+    ];
+
+    const resultElement = document.getElementById('result');
+    const buttonElement = document.querySelector('button');
+    let lastSelectedFood = null; 
+    let spinningInterval;
+
+    /**
+     * 核心抽签逻辑，包含剧烈旋转和公布动画效果
+     */
+    function drawFood() {
+        buttonElement.disabled = true; 
+        resultElement.classList.remove('animate-result'); 
+        
+        let spinCount = 0;
+        const maxSpins = 25; // 增加旋转次数，延长仪式感
+
+        // 1. 启动滚轮闪烁和剧烈晃动效果
+        resultElement.classList.add('spin-effect');
+
+        spinningInterval = setInterval(() => {
+            // 快速随机闪烁清單中的食物
+            const tempIndex = Math.floor(Math.random() * foodOptions.length);
+            resultElement.textContent = foodOptions[tempIndex];
+            spinCount++;
+
+            if (spinCount > maxSpins) {
+                clearInterval(spinningInterval);
+                
+                // 2. 最终结果选择逻辑 (排除上次结果)
+                let currentOptions = foodOptions;
+                if (lastSelectedFood) {
+                    currentOptions = foodOptions.filter(food => food !== lastSelectedFood);
+                    if (currentOptions.length === 0) {
+                         currentOptions = foodOptions;
+                    }
+                }
+                
+                const listLength = currentOptions.length;
+                const randomIndex = Math.floor(Math.random() * listLength);
+                const selectedFood = currentOptions[randomIndex];
+                
+                lastSelectedFood = selectedFood;
+                
+                // 3. 移除旋转效果，公布最终结果并添加动画
+                resultElement.classList.remove('spin-effect');
+                resultElement.textContent = selectedFood;
+                resultElement.classList.add('animate-result'); 
+                
+                // 4. 更新按钮状态和文本
+                const foodName = lastSelectedFood.split(' ')[0];
+                buttonElement.textContent = `再转一次！ (排除: ${foodName})`;
+                buttonElement.disabled = false;
+            }
+        }, 80); // 间隔更短，闪烁更快
+
+    }
+
+    // 页面加载时执行
+    document.getElementById('food-list-display').textContent = `思童，当前有 ${foodOptions.length} 个选择哦，点击按钮帮你解决世纪难题~`;
+</script>
+
+</body>
+</html>
